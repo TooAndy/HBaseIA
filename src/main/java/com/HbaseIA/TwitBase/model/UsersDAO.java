@@ -1,6 +1,5 @@
 package com.HbaseIA.TwitBase.model;
 
-import javafx.scene.control.Tab;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -58,12 +57,18 @@ public class UsersDAO {
     }
 
     public static Delete mkDel(String user) {
-        Delete d = new Delete(Bytes.toBytes(user));
-        return d;
+        Delete delete = new Delete(Bytes.toBytes(user));
+        return delete;
     }
 
-    public static Scan mkScan(){
+    public static Scan mkScan() {
         Scan scan = new Scan();
+        scan.addFamily(INFO_FAM);
+        return scan;
+    }
+
+    public static Scan mkScan(String begin, String end) {
+        Scan scan = new Scan(Bytes.toBytes(begin), Bytes.toBytes(end));
         scan.addFamily(INFO_FAM);
         return scan;
     }
@@ -92,7 +97,18 @@ public class UsersDAO {
         Table users = connection.getTable(TABLE_NAME);
         ResultScanner results = users.getScanner(mkScan());
         ArrayList<com.HbaseIA.TwitBase.model.User> ret = new ArrayList<com.HbaseIA.TwitBase.model.User>();
-        for (Result r:results){
+        for (Result r : results) {
+            ret.add(new User(r));
+        }
+        users.close();
+        return ret;
+    }
+
+    public List<com.HbaseIA.TwitBase.model.User> getUsers(String begin, String end) throws IOException {
+        Table users = connection.getTable(TABLE_NAME);
+        ResultScanner results = users.getScanner(mkScan(begin, end));
+        ArrayList<com.HbaseIA.TwitBase.model.User> ret = new ArrayList<com.HbaseIA.TwitBase.model.User>();
+        for (Result r : results) {
             ret.add(new User(r));
         }
         users.close();
