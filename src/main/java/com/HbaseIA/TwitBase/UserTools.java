@@ -34,7 +34,6 @@ public class UserTools {
             System.out.println("Getting user " + args[1]);
             User u = dao.getUser(args[1]);
             System.out.println("Successfully added user " + u);
-
         }
         if ("list".equals(args[0])) {
             for (User u : dao.getUsers()) {

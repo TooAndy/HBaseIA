@@ -1,4 +1,4 @@
-package com.HbaseIA.TwitBase;
+package com.HbaseIA.TwitBase.model;
 
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
@@ -63,7 +63,7 @@ public class TwitsDAO {
     private static Scan mkScan(String user) {
         byte[] userHash = Md5Utils.md5sum(user);
         //        byte[] startRow = Bytes.padTail(userHash, longLength);
-        byte[] startRow = Bytes.padHead(userHash, longLength);
+        byte[] startRow = Bytes.padTail(userHash, longLength);
         byte[] endRow = Bytes.padTail(userHash, longLength);
         endRow[Md5Utils.MD5_LENGTH - 1]++;
 
