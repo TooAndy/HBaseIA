@@ -18,10 +18,10 @@ import utils.Md5Utils;
 import static org.apache.hadoop.hbase.CellUtil.cloneValue;
 
 public class TwitsDAO {
-    public static final byte[] TABLE_NAME = Bytes.toBytes("twits");
-    public static final byte[] TWITS_FAM = Bytes.toBytes("twits");
-    public static final byte[] USER_COL = Bytes.toBytes("user");
-    public static final byte[] TWIT_COL = Bytes.toBytes("twit");
+    private static final byte[] TABLE_NAME = Bytes.toBytes("twits");
+    private static final byte[] TWITS_FAM = Bytes.toBytes("twits");
+    private static final byte[] USER_COL = Bytes.toBytes("user");
+    private static final byte[] TWIT_COL = Bytes.toBytes("twit");
     private static final int longLength = 8;   //bytes
 
     private Connection connection;
@@ -84,14 +84,14 @@ public class TwitsDAO {
         return sb.toString();
     }
 
-    private void postTwit(String user, DateTime dt, String text) throws IOException {
+    public void postTwit(String user, DateTime dt, String text) throws IOException {
         Table twits = connection.getTable(TableName.valueOf(TABLE_NAME));
         Put p = mkPut(new Twit(user, dt, text));
         twits.put(p);
         twits.close();
     }
 
-    private com.HbaseIA.TwitBase.model.Twit getTwit(String user, DateTime dt) throws IOException {
+    public com.HbaseIA.TwitBase.model.Twit getTwit(String user, DateTime dt) throws IOException {
         Table twits = connection.getTable(TableName.valueOf(TABLE_NAME));
         Get g = mkGet(user, dt);
         Result result = twits.get(g);
