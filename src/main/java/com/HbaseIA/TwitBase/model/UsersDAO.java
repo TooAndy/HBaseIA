@@ -22,6 +22,15 @@ public class UsersDAO {
         this.connection = connection;
     }
 
+    public long incTweetCount(String user) throws IOException {
+        Table userTable = connection.getTable(TABLE_NAME);
+        long ret = userTable.incrementColumnValue(Bytes.toBytes(user),INFO_FAM, NAME_COL, 1L);
+
+        userTable.close();
+        return ret;
+
+    }
+
     public static class User extends com.HbaseIA.TwitBase.model.User {
         private User(String user, String name, String email, String password) {
             this.user = user;
