@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import utils.Md5Utils;
@@ -22,7 +21,7 @@ public class TwitsDAO {
     private static final byte[] TWITS_FAM = Bytes.toBytes("twits");
     private static final byte[] USER_COL = Bytes.toBytes("user");
     private static final byte[] TWIT_COL = Bytes.toBytes("twit");
-    private static final int longLength = 8;   //bytes
+    private static final int longLength = Long.SIZE / 8;   //bytes
 
     private Connection connection;
     private static final Logger log = Logger.getLogger(TwitsDAO.class.toString());
@@ -67,20 +66,21 @@ public class TwitsDAO {
         byte[] endRow = Bytes.padTail(userHash, longLength);
         endRow[Md5Utils.MD5_LENGTH - 1]++;
 
-        log.log(Level.SEVERE, "Scan starting at: '" + to_str(startRow) + "'");
-        log.log(Level.SEVERE, "Scan stopping at: '" + to_str(endRow) + "'");
+        log.info("Scan starting at: '" + to_str(startRow) + "'");
+        log.info("Scan stopping at: '" + to_str(endRow) + "'");
 
         Scan s = new Scan(startRow, endRow);
         s.addColumn(TWITS_FAM, USER_COL);
         s.addColumn(TWITS_FAM, TWIT_COL);
         return s;
     }
+
     private static String to_str(byte[] xs) {
-        StringBuilder sb = new StringBuilder(xs.length *2);
-        for(byte b : xs) {
+        StringBuilder sb = new StringBuilder(xs.length * 2);
+        for (byte b : xs) {
             sb.append(b).append(" ");
         }
-        sb.deleteCharAt(sb.length() -1);
+        sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
     }
 
@@ -109,7 +109,7 @@ public class TwitsDAO {
 
         ResultScanner results = twits.getScanner(mkScan(user));
         List<com.HbaseIA.TwitBase.model.Twit> ret = new ArrayList<com.HbaseIA.TwitBase.model.Twit>();
-        for (Result r:results){
+        for (Result r : results) {
             ret.add(new Twit(r));
         }
         twits.close();
@@ -123,14 +123,14 @@ public class TwitsDAO {
                     cloneValue(r.getColumnLatestCell(TWITS_FAM, TWIT_COL)));
         }
 
+        private Twit(byte[] user, byte[] dt, byte[] text) {
+            this(Bytes.toString(user), new DateTime(-1* Bytes.toLong(dt)), Bytes.toString(text));
+        }
+
         private Twit(String user, DateTime dt, String text) {
             this.user = user;
             this.dt = dt;
             this.text = text;
-        }
-
-        private Twit(byte[] user, byte[] dt, byte[] text) {
-            this(Bytes.toString(user), new DateTime(Bytes.toLong(dt)), Bytes.toString(text));
         }
     }
 }

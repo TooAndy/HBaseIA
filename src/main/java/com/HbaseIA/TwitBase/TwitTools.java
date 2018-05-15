@@ -10,7 +10,6 @@ import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TwitTools {
@@ -35,7 +34,7 @@ public class TwitTools {
         Configuration configuration = new Configuration();
 
         configuration.set("hbase.zookeeper.property.clientPort", "2181");
-        configuration.set("hbase.zookeeper.quorum", "10.104.2.219");
+        configuration.set("hbase.zookeeper.quorum", "10.104.2.219"); // replace this zookeeper server ip address to yours
         Connection connection = ConnectionFactory.createConnection(configuration);
         TwitsDAO twitsDao = new TwitsDAO(connection);
         UsersDAO usersDao = new UsersDAO(connection);
