@@ -11,5 +11,4 @@ public abstract class User {
         return String.format("<User: %s, %s, %s>", user, name, email);
     }
 
-
 }

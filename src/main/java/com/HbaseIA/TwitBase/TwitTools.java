@@ -1,5 +1,6 @@
 package com.HbaseIA.TwitBase;
 
+import com.HbaseIA.TwitBase.common.Const;
 import com.HbaseIA.TwitBase.model.Twit;
 import com.HbaseIA.TwitBase.model.TwitsDAO;
 import com.HbaseIA.TwitBase.model.UsersDAO;
@@ -33,8 +34,9 @@ public class TwitTools {
 
         Configuration configuration = new Configuration();
 
-        configuration.set("hbase.zookeeper.property.clientPort", "2181");
-        configuration.set("hbase.zookeeper.quorum", "10.104.2.219"); // replace this zookeeper server ip address to yours
+        configuration.set("hbase.zookeeper.quorum", Const.ZK_QUORUM);
+        configuration.set("hbase.zookeeper.property.clientPort", Const.ZK_PORT);
+
         Connection connection = ConnectionFactory.createConnection(configuration);
         TwitsDAO twitsDao = new TwitsDAO(connection);
         UsersDAO usersDao = new UsersDAO(connection);

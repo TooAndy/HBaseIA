@@ -1,5 +1,6 @@
 package com.HbaseIA.TwitBase;
 
+import com.HbaseIA.TwitBase.common.Const;
 import com.HbaseIA.TwitBase.model.User;
 import com.HbaseIA.TwitBase.model.UsersDAO;
 import org.apache.hadoop.conf.Configuration;
@@ -7,10 +8,11 @@ import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
 
 import java.io.IOException;
+import java.util.List;
 
 
 public class UserTools {
-    public static final String usage =
+    private static final String usage =
             "UsersTool action ...\n" +
                     "  help - print this message and exit.\n" +
                     "  add user name email password" +
@@ -25,8 +27,9 @@ public class UserTools {
         }
         Configuration configuration = new Configuration();
 
-        configuration.set("hbase.zookeeper.property.clientPort", "2181");
-        configuration.set("hbase.zookeeper.quorum", "10.104.2.219");
+        configuration.set("hbase.zookeeper.quorum", Const.ZK_QUORUM);
+        configuration.set("hbase.zookeeper.property.clientPort", Const.ZK_PORT);
+
         Connection connection = ConnectionFactory.createConnection(configuration);
         UsersDAO dao = new UsersDAO(connection);
 
@@ -36,7 +39,9 @@ public class UserTools {
             System.out.println("Successfully added user " + u);
         }
         if ("list".equals(args[0])) {
-            for (User u : dao.getUsers()) {
+            List<User> users = dao.getUsers();
+            System.out.println("Found " + users.size() + " users: ");
+            for (User u : users) {
                 System.out.println(u);
             }
         }

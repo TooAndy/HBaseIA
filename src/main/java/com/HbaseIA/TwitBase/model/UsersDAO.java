@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UsersDAO {
-    public static final TableName TABLE_NAME = TableName.valueOf("users");
-    public static final byte[] INFO_FAM = Bytes.toBytes("info");
-    public static final byte[] USER_COL = Bytes.toBytes("user");
-    public static final byte[] NAME_COL = Bytes.toBytes("name");
-    public static final byte[] EMAIL_COL = Bytes.toBytes("email");
-    public static final byte[] PASS_COL = Bytes.toBytes("password");
+    private static final TableName TABLE_NAME = TableName.valueOf("users");
+    private static final byte[] INFO_FAM = Bytes.toBytes("info");
+    private static final byte[] USER_COL = Bytes.toBytes("user");
+    private static final byte[] NAME_COL = Bytes.toBytes("name");
+    private static final byte[] EMAIL_COL = Bytes.toBytes("email");
+    private static final byte[] PASS_COL = Bytes.toBytes("password");
     public static final byte[] TWEETS_COL = Bytes.toBytes("tweet_count");
     private Connection connection;
 
@@ -66,8 +66,7 @@ public class UsersDAO {
     }
 
     public static Delete mkDel(String user) {
-        Delete delete = new Delete(Bytes.toBytes(user));
-        return delete;
+        return new Delete(Bytes.toBytes(user));
     }
 
     public static Scan mkScan() {
